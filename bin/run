@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+require "./lib/test.rb"
+require "./lib/scraper.rb"
+Welcome.new.intro
+#Scraper.new.scrape_site_for_categories("https://www.mcdonalds.com/us/en-us.html")
+#Scraper.new.test
