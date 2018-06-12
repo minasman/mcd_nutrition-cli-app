@@ -5,14 +5,15 @@ require 'watir'
 require 'webdrivers'
 
 class Scraper
-  def scrape_site_for_categories(url)
-    categories = []
+  def scrape_site_for_restaurants(url)
+    restaurants = []
     site = Nokogiri::HTML(open(url))
-    site = site.css(".vertical-middle")
-    site.each do |category|
-      categories << {category.text.strip => category.css("a").attribute("href").value}
+    site = site.css(".restaurant_list li")
+    site.each do |restaurant|
+      restaurants << {restaurant.css("a").text.strip => restaurant.css("a").attribute("href").value}
     end
-    categories
+    binding.pry
+    restaurants
   end
 
   def scrape_category_for_list(categrory)
@@ -39,7 +40,7 @@ class Scraper
     nutrition_site = []
     mock = Watir::Browser.new :chrome, headless: true
     mock_site = mock.goto meal_site
-  
+
     binding.pry
     site = Nokogiri::HTML.parse(mock.html)
     site = site.css(".zoom-anim-parent")

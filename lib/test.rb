@@ -1,29 +1,15 @@
 class Welcome
 
   def intro
-    puts "Welcome To McDonald's Nutrition Finder"
-    list_menu
+    puts "Welcome To The Fast Food Nutrition Finder"
+    list_restaurants
   end
 
-  def list_menu
-    puts "Please select a category:"
-    menu = Scraper.new.scrape_site_for_categories("https://www.mcdonalds.com/us/en-us.html")
-    menu.each_with_index do |item, i|
-      puts "#{i + 1}: #{item.flatten[0]}"
-    end
-    input = gets.strip until input.to_i > 0 && input.to_i <= menu.size
-    puts "You Selected #{menu[input.to_i - 1].flatten[0]}"
-    category = menu[input.to_i - 1].flatten[0]
-    case category
-    when "Extra Value Meal"
-      select_meal(Scraper.new.scrape_evm_list("https://www.mcdonalds.com#{menu[input.to_i - 1].flatten[1]}"), "https://www.mcdonalds.com#{menu[input.to_i - 1].flatten[1]}")
-    when "Happy Meal"
-      select_happy_meal(Scraper.new.scrape_category_for_list("https://www.mcdonalds.com#{menu[input.to_i - 1].flatten[1]}"),menu[input.to_i - 1].flatten[0])
-    when "Sauces"
-      select_sauce(Scraper.new.scrape_category_for_list("https://www.mcdonalds.com#{menu[input.to_i - 1].flatten[1]}"),menu[input.to_i - 1].flatten[0])
-    else
-    select_item(Scraper.new.scrape_category_for_list("https://www.mcdonalds.com#{menu[input.to_i - 1].flatten[1]}"), menu[input.to_i - 1].flatten[0])
-    end
+  def list_restaurants
+    puts "\nPlease select a Restaurant:"
+    restaurants = Scraper.new.scrape_site_for_restaurants("https://fastfoodnutrition.org/")
+
+
   end
 
   def select_meal(category, meal_site)
