@@ -25,6 +25,17 @@ class Scraper
     item_list
   end
 
+  def scrape_evm_list(category)
+    item_list = []
+    site = Nokogiri::HTML(open(category))
+    site = site.css(".zoom-anim-parent")
+    site.each do |item|
+      item_list << [item.css("div div div div h3").text]
+    end
+    item_list
+  end
+
+
   def scrape_nutrition_info(item)
     i = 0
     nutrition_list = []

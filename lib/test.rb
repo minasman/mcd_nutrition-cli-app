@@ -16,18 +16,34 @@ class Welcome
     category = menu[input.to_i - 1].flatten[0]
     case category
     when "Extra Value Meal"
-      select_meal(Scraper.new.scrape_category_for_list("https://www.mcdonalds.com#{menu[input.to_i - 1].flatten[1]}"))
+      select_meal(Scraper.new.scrape_evm_list("https://www.mcdonalds.com#{menu[input.to_i - 1].flatten[1]}"),menu[input.to_i - 1].flatten[0])
     when "Happy Meal"
-      select_happy_meal(Scraper.new.scrape_category_for_list("https://www.mcdonalds.com#{menu[input.to_i - 1].flatten[1]}"))
+      select_happy_meal(Scraper.new.scrape_category_for_list("https://www.mcdonalds.com#{menu[input.to_i - 1].flatten[1]}"),menu[input.to_i - 1].flatten[0])
     when "Sauces"
-      select_sauces(Scraper.new.scrape_category_for_list("https://www.mcdonalds.com#{menu[input.to_i - 1].flatten[1]}"))
+      select_sauce(Scraper.new.scrape_category_for_list("https://www.mcdonalds.com#{menu[input.to_i - 1].flatten[1]}"),menu[input.to_i - 1].flatten[0])
     else
     select_item(Scraper.new.scrape_category_for_list("https://www.mcdonalds.com#{menu[input.to_i - 1].flatten[1]}"), menu[input.to_i - 1].flatten[0])
     end
   end
 
+  def select_meal(category, input)
+    puts "Please select the entree for your meal:"
+    category.each_with_index {|item, i| puts "#{i + 1}: #{item.flatten[0]}"}
+    input = gets.strip until input.to_i > 0 && input.to_i <= category.size
+    puts "You selected an Extra Value Meal with #{category[input.to_i - 1].flatten[0]}"
+    get_evm_nutrition(Scraper.new.scrape_evm_nutrition_info(category[input.to_i - 1].flatten[0])
+  end
+
+  def select_happy_meal(category, input)
+    puts "Please select the entree for you Happy Meal:"
+  end
+
+  def select_sauce(category, input)
+    puts "Sauces"
+  end
+
   def select_item(category, input)
-    puts "Please select an item from #{input}"
+    puts "Please select an item from #{input}:"
     category.each_with_index {|item, i| puts "#{i + 1}: #{item.flatten[0]}"}
     input = gets.strip until input.to_i > 0 && input.to_i <= category.size
     item = category[input.to_i - 1].flatten[0]
