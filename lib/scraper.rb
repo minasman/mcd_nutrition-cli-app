@@ -30,11 +30,29 @@ class Scraper
     site = Nokogiri::HTML(open(category))
     site = site.css(".zoom-anim-parent")
     site.each do |item|
-      item_list << [item.css("div div div div h3").text]
+      item_list << item.css("div div div div h3").text
     end
     item_list
   end
 
+  def scrape_evm_nutrition_info(item_picked, meal_site)
+    nutrition_site = []
+    mock = Watir::Browser.new :chrome, headless: true
+    mock_site = mock.goto meal_site
+  
+    binding.pry
+    site = Nokogiri::HTML.parse(mock.html)
+    site = site.css(".zoom-anim-parent")
+    site.each do |item|
+        puts "Item = #{item_picked} and I am at #{item.css("div div div div h3").text}"
+      if item.css("div div div div h3").text == item_picked
+        puts "found #{item_picked}"
+        puts item.css("div div div div p a").attribute("href").value
+        mock_site.links(:text =>'Learn more about Egg McMuffin').click
+        binding.pry
+      end
+    end
+  end
 
   def scrape_nutrition_info(item)
     i = 0

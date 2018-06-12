@@ -16,7 +16,7 @@ class Welcome
     category = menu[input.to_i - 1].flatten[0]
     case category
     when "Extra Value Meal"
-      select_meal(Scraper.new.scrape_evm_list("https://www.mcdonalds.com#{menu[input.to_i - 1].flatten[1]}"),menu[input.to_i - 1].flatten[0])
+      select_meal(Scraper.new.scrape_evm_list("https://www.mcdonalds.com#{menu[input.to_i - 1].flatten[1]}"), "https://www.mcdonalds.com#{menu[input.to_i - 1].flatten[1]}")
     when "Happy Meal"
       select_happy_meal(Scraper.new.scrape_category_for_list("https://www.mcdonalds.com#{menu[input.to_i - 1].flatten[1]}"),menu[input.to_i - 1].flatten[0])
     when "Sauces"
@@ -26,12 +26,12 @@ class Welcome
     end
   end
 
-  def select_meal(category, input)
+  def select_meal(category, meal_site)
     puts "Please select the entree for your meal:"
-    category.each_with_index {|item, i| puts "#{i + 1}: #{item.flatten[0]}"}
+    category.each_with_index {|item, i| puts "#{i + 1}: #{item}"}
     input = gets.strip until input.to_i > 0 && input.to_i <= category.size
-    puts "You selected an Extra Value Meal with #{category[input.to_i - 1].flatten[0]}"
-    get_evm_nutrition(Scraper.new.scrape_evm_nutrition_info(category[input.to_i - 1].flatten[0])
+    puts "You selected an Extra Value Meal with #{category[input.to_i - 1]}"
+    get_evm_nutrition(Scraper.new.scrape_evm_nutrition_info(category[input.to_i - 1], meal_site))
   end
 
   def select_happy_meal(category, input)
@@ -57,6 +57,10 @@ class Welcome
       puts "#{item.flatten[0]}: #{item.flatten[1]}"
     end
     continue?
+  end
+
+  def get_evm_nutrition(a)
+    puts "IN get_evm_nutrition"
   end
 
   def continue?
