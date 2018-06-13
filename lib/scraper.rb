@@ -12,18 +12,18 @@ class Scraper
     site.each do |restaurant|
       restaurants << {restaurant.css("a").text.strip => restaurant.css("a").attribute("href").value}
     end
-    binding.pry
     restaurants
   end
 
-  def scrape_category_for_list(categrory)
-    item_list = []
-    site = Nokogiri::HTML(open(categrory))
-    site = site.css(".zoom-anim-parent")
+  def scrape_restaurant_categories(category) #passed hash
+    category_list = []
+    url = "https://fastfoodnutrition.org#{category.flatten[1]}"
+    site = Nokogiri::HTML(open(url))
+    site = site.css("div.container.main_container div #contentarea a.toggle_category.toggle_div")
     site.each do |item|
-      item_list << {item.css("div div div h4").text => item.css("a").attribute("href").value}
+      category_list << item.css("h2").text
     end
-    item_list
+    category_list
   end
 
   def scrape_evm_list(category)

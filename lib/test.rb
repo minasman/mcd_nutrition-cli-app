@@ -6,35 +6,24 @@ class Welcome
   end
 
   def list_restaurants
-    puts "\nPlease select a Restaurant:"
+    puts "\nPlease select a Restaurant by number:"
     restaurants = Scraper.new.scrape_site_for_restaurants("https://fastfoodnutrition.org/")
-
-
+    restaurants.each_with_index {|restaurant, i| puts "#{i + 1}: #{restaurant.flatten[0]}"}
+    selection = gets.strip.to_i
+    puts "\nYou selected #{restaurants[selection - 1].flatten[0]}"
+    select_category(Scraper.new.scrape_restaurant_categories(restaurants[selection - 1]))
   end
 
-  def select_meal(category, meal_site)
-    puts "Please select the entree for your meal:"
-    category.each_with_index {|item, i| puts "#{i + 1}: #{item}"}
-    input = gets.strip until input.to_i > 0 && input.to_i <= category.size
-    puts "You selected an Extra Value Meal with #{category[input.to_i - 1]}"
-    get_evm_nutrition(Scraper.new.scrape_evm_nutrition_info(category[input.to_i - 1], meal_site))
-  end
-
-  def select_happy_meal(category, input)
-    puts "Please select the entree for you Happy Meal:"
-  end
-
-  def select_sauce(category, input)
-    puts "Sauces"
+  def select_category(categories)
+    puts "\nPlease select a Menu Item:"
+    categories.each_with_index {|category, i| puts "#{i + 1}: #{category}"}
+    selection = gets.strip.to_i
+    puts "\nYou selected #{categories[selection - 1]}"
+    select_item(Scraper.new.scrape_category_items(categories[selection - 1], selection - 1))
   end
 
   def select_item(category, input)
     puts "Please select an item from #{input}:"
-    category.each_with_index {|item, i| puts "#{i + 1}: #{item.flatten[0]}"}
-    input = gets.strip until input.to_i > 0 && input.to_i <= category.size
-    item = category[input.to_i - 1].flatten[0]
-    puts "You selected #{item}"
-    get_nutrition(Scraper.new.scrape_nutrition_info("https://www.mcdonalds.com#{category[input.to_i - 1].flatten[1]}"), category[input.to_i - 1].flatten[0])
   end
 
   def get_nutrition(nutrition_list, item_name)
