@@ -23,7 +23,6 @@ GEM
       nokogiri (~> 1.6)
       rubyzip (~> 1.0)
       selenium-webdriver (~> 3.0)
-    xvfb (1.0.4)
 
 PLATFORMS
   ruby
@@ -34,7 +33,6 @@ DEPENDENCIES
   pry (~> 0.11.3)
   watir (~> 6.11)
   webdrivers (~> 3.3, >= 3.3.1)
-  xvfb (~> 1.0, >= 1.0.4)
 
 BUNDLED WITH
    1.16.2
