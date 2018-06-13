@@ -1,8 +1,6 @@
 require 'nokogiri'
 require 'open-uri'
 require 'pry'
-require 'watir'
-require 'webdrivers'
 
 class Scraper
   def scrape_site_for_restaurants(url)
@@ -43,17 +41,7 @@ class Scraper
     site = Nokogiri::HTML(open(url))
     site = site.css(".item_nutrition tbody tr")
     binding.pry
-    site.each do |item|
-
-    end
+    nutrition_list << {site.css("tr")[2].css("td a span").text => site.css("tr")[2].css("td td").text}
   end
 
-  def test
-    #mock = Watir::Browser.new
-    mock_site = Watir::Browser.start 'https://www.mcdonalds.com/us/en-us/product/quarter-pounder-with-cheese.html'
-    site = Nokogiri::HTML.parse(mock_site.html)
-    binding.pry
-    #site.css("div.numbers span")[0].text  -- this should give me calories
-
-  end
 end
