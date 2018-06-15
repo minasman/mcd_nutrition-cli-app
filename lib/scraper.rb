@@ -6,22 +6,29 @@ class Scraper
   def scrape_site_for_restaurants(url)
     restaurants = []
     site = Nokogiri::HTML(open(url))
-    site = site.css(".restaurant_list li")
+    site = site.css("div.entry-content table tbody tr")
     site.each do |restaurant|
-      restaurants << {restaurant.css("a").text.strip => restaurant.css("a").attribute("href").value}
+      restaurants << {restaurant.css("td")[1].css("a").text.strip => restaurant.css("td")[1].css("a").attribute("href").value}
+      restaurants << {restaurant.css("td")[3].css("a").text.strip => restaurant.css("td")[3].css("a").attribute("href").value}
     end
     restaurants
   end
 
   def scrape_restaurant_categories(category) #passed hash
     category_list = []
-    url = "https://fastfoodnutrition.org#{category.flatten[1]}"
+    url = "http://www.nutrition-charts.com/#{category.flatten[1]}"
     site = Nokogiri::HTML(open(url))
-    site = site.css("#contentarea a.toggle_category.toggle_div")
-    site.each do |item|
-      category_list << item.css("h2").text unless item.css("h2").text == "Most Popular Items"
+    case category.flatten[0]
+    when "Burger King"
+      site = site.css("div table tbody td h3")
+      binding.pry
+      #category_list << site.css("tr")[0].css("th")[0].text
+      site.each do |item|
+        category_list << item.css("h3").text
+      end
+      binding.pry
+      category_list
     end
-    category_list
   end
 
   def scrape_category_items(item_name, index, item_site)
