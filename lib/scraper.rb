@@ -21,12 +21,42 @@ class Scraper
     case category.flatten[0]
     when "Burger King"
       site = site.css("div table tbody td h3")
-      binding.pry
-      #category_list << site.css("tr")[0].css("th")[0].text
       site.each do |item|
-        category_list << item.css("h3").text
+        category_list << item.text
       end
-      binding.pry
+      category_list
+    when "Wendys"
+      site = site.css("div table tbody td h3")
+      site.each do |item|
+        category_list << item.text
+      end
+      category_list
+    when "Pizza Hut"
+      site = site.css("div table tbody td strong")
+      site.each do |item|
+        category_list << item.text
+      end
+      category_list
+    when "Applebees"
+      site = site.css("div table tbody")
+      site = site.css("tr.rowheader")
+      site.each do |item|
+        category_list << item.css("td")[0].text
+      end
+      category_list
+    when "Baja Fresh"
+      site = site.css("div table tbody tr")
+      site.each do |item|
+        item.to_s.include?("<th>") ? category_list << item.css("th")[0].text : ""
+      end
+      category_list
+    else
+      site = site.css("div table tbody")
+      category_list << site[0].css("tr")[0].css("th")[0].text
+      site = site.css("tr.rowheader")
+      site.each do |item|
+        category_list << item.css("th")[0].text
+      end
       category_list
     end
   end
