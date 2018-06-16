@@ -31,6 +31,12 @@ class Scraper
         category_list << item.text
       end
       category_list
+    when "Buffalo Wild Wings"
+      site = site.css("div table tbody td h3")
+      site.each do |item|
+        category_list << item.text
+      end
+      category_list
     when "Pizza Hut"
       site = site.css("div table tbody td strong")
       site.each do |item|
@@ -61,14 +67,108 @@ class Scraper
     end
   end
 
-  def scrape_category_items(item_name, index, item_site)
+  def scrape_category_items(item_name, index, item_site, restaurant)
       item_list = []
       site = Nokogiri::HTML(open(item_site))
-      site = site.css("#contentarea div.categories")[index].css("ul div li")
+
+      case restaurant
+      when "Burger King"
+        site = site.css("div table tbody tr")
+        site.each do |item|
+          if item.to_s.include?("<h3>")
+            if item.css("h3")[0].text == item_name
+              next_item = item.next_element
+              begin
+                if next_item.to_s.include?("<td>") && !next_item.to_s.include?("<span") && !next_item.to_s.include?("header")
+                  item_list << next_item.css("td")[0].text
+                end
+                next_item = next_item.next_element
+                next_item == nil ? next_item = "<h3>" : next_item
+              end while !next_item.to_s.include?("<h3>")
+            end
+          end
+        end
+        item_list
+      when "Wendys"
+        site = site.css("div table tbody tr")
+        site.each do |item|
+          if item.to_s.include?("<h3>")
+            if item.css("h3")[0].text == item_name
+              next_item = item.next_element
+              begin
+                if next_item.to_s.include?("<td>") && !next_item.to_s.include?("<span") && !next_item.to_s.include?("header")
+                  item_list << next_item.css("td")[0].text
+                end
+                next_item = next_item.next_element
+                next_item == nil ? next_item = "<h3>" : next_item
+              end while !next_item.to_s.include?("<h3>")
+            end
+          end
+        end
+        item_list
+      when "Buffalo Wild Wings"
+        site = site.css("div table tbody tr")
+        site.each do |item|
+          if item.to_s.include?("<h3>")
+            if item.css("h3")[0].text == item_name
+              next_item = item.next_element
+              begin
+                if next_item.to_s.include?("<td>") && !next_item.to_s.include?("<span") && !next_item.to_s.include?("header") && next_item.css("td")[0].text != " "
+                  item_list << next_item.css("td")[0].text
+                end
+                next_item = next_item.next_element
+                next_item == nil ? next_item = "<h3>" : next_item
+              end while !next_item.to_s.include?("<h3>")
+            end
+          end
+        end
+        item_list
+      when "Pizza Hut"
+        site = site.css("div table tbody tr")
+        site.each do |item|
+          if item.to_s.include?("<strong>")
+            if item.css("strong")[0].text == item_name
+              next_item = item.next_element
+              begin
+                item_list << next_item.css("td")[0].text if !next_item.to_s.include?("<span")
+                next_item = next_item.next_element
+                next_item == nil ? next_item = "<strong>" : next_item
+              end while !next_item.to_s.include?("<strong>")
+            end
+          end
+        end
+        item_list
+      when "Applebees"
+       site = site.css("div table tbody tr")
+       site.each do |item|
+          if item.to_s.include?("rowheader")
+            if item.css("td")[0].text == item_name
+              next_item = item.next_element
+              begin
+                item_list << next_item.css("td")[0].text if !next_item.to_s.include?("<span")
+                next_item = next_item.next_element
+                next_item == nil ? next_item = "<rowheader>" : next_item
+              end while !next_item.to_s.include?("rowheader")
+            end
+          end
+        end
+        item_list
+      else
+      site = site.css("div table tbody tr")
       site.each do |item|
-        item_list << {item.css("a").text => item.css("a").attribute("href").value}
+        if item.to_s.include?("<th>")
+          if item.css("th")[0].text == item_name
+            next_item = item.next_element
+            begin
+              item_list << next_item.css("td")[0].text if !next_item.to_s.include?("<span")
+              next_item = next_item.next_element
+              next_item == nil ? next_item = "<th>" : next_item
+            end while !next_item.to_s.include?("<th>")
+          end
+        end
       end
       item_list
+    end
   end
 
   def scrape_nutrition_info(item) #get a hash
