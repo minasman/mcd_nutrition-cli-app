@@ -19,10 +19,10 @@ class Welcome
     categories.each_with_index {|category, i| puts "#{i + 1}: #{category}"}
     selection = gets.strip.to_i
     puts "\nYou selected #{categories[selection - 1]}"
-    select_item(Scraper.new.scrape_category_items(categories[selection - 1], selection, item_site, restaurant), item_site)
+    select_item(Scraper.new.scrape_category_items(categories[selection - 1], selection, item_site, restaurant), item_site, restaurant)
   end
 
-  def select_item(menu_item_list,item_site)
+  def select_item(menu_item_list,item_site, restaurant)
     i = 1
     puts "Please select an item:"
     menu_item_list.each do |item|
@@ -31,7 +31,7 @@ class Welcome
     end
     selection = gets.strip.to_i
     puts "You selected #{menu_item_list[selection - 1]}"
-    get_nutrition(Scraper.new.scrape_nutrition_info(menu_item_list[selection - 1], item_site), menu_item_list[selection - 1])
+    get_nutrition(Scraper.new.scrape_nutrition_info(menu_item_list[selection - 1], item_site, restaurant), menu_item_list[selection - 1])
   end
 
   def get_nutrition(nutrition_list, item_name)

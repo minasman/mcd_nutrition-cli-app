@@ -170,26 +170,63 @@ class Scraper
     end
   end
 
-  def scrape_nutrition_info(item_name, item_site)
+  def scrape_nutrition_info(item_name, item_site, restaurant)
     index = 1
     nutrition_list = []
     site = Nokogiri::HTML(open(item_site))
-    nutrition_items = site.css("div table thead tr th")
-    nutrition_items.each {|desc| nutrition_list << [desc.text.strip, ""]}
-    site = site.css("div table tbody tr")
-    site.each do |item|
-      if item.to_s.include?("<td>")
-        if item.css("td")[0].text == item_name
-          i = 0
-          while i < nutrition_list.length
-            nutrition_list[i][1] = item.css("td")[i].text
-            i += 1
+    case restaurant
+    when "Burger King"
+      nutrition_items = site.css("div table thead tr th")
+      nutrition_items.each {|desc| nutrition_list << [desc.text.strip, ""]}
+      site = site.css("div table tbody tr")
+      site.each do |item|
+        if item.to_s.include?("<td>")
+          if item.css("td")[0].text == item_name
+            i = 0
+            while i < nutrition_list.length
+              nutrition_list[i][1] = item.css("td")[i].text
+              i += 1
+            end
           end
         end
-      end
-    end #do
-    nutrition_list.shift
-    nutrition_list
-  end
+      end #do
+      nutrition_list.shift
+      nutrition_list
+    when "Pizza Hut"
+      nutrition_items = site.css("div table tbody tr th")
+      nutrition_items.each {|desc| nutrition_list << [desc.text.strip, ""]}
+      site = site.css("div table tbody tr")
+      site.each do |item|
+        if item.to_s.include?("<td>")
+          if item.css("td")[0].text == item_name
+            i = 0
+            while i < nutrition_list.length
+              nutrition_list[i][1] = item.css("td")[i].text
+              i += 1
+            end
+          end
+        end
+      end #do
+      nutrition_list.shift
+      nutrition_list
+    else
+      nutrition_items = site.css("div table thead tr th")
+      nutrition_items.each {|desc| nutrition_list << [desc.text.strip, ""]}
+      site = site.css("div table tbody tr")
+      site.each do |item|
+        if item.to_s.include?("<td>")
+          if item.css("td")[0].text == item_name
+            i = 0
+            while i < nutrition_list.length
+              nutrition_list[i][1] = item.css("td")[i].text
+              i += 1
+            end
+          end
+        end
+      end #do
+      nutrition_list.shift
+      nutrition_list
+    end
 
+  end
 end
