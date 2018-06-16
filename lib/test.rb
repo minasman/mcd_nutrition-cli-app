@@ -30,31 +30,25 @@ class Welcome
       i += 1
     end
     selection = gets.strip.to_i
-    puts "You selected #{menu_item_list[selection - 1].flatten[0]}"
-    binding.pry
-    get_nutrition(Scraper.new.scrape_nutrition_info(menu_item_list[selection - 1]))
+    puts "You selected #{menu_item_list[selection - 1]}"
+    get_nutrition(Scraper.new.scrape_nutrition_info(menu_item_list[selection - 1], item_site), menu_item_list[selection - 1])
   end
 
   def get_nutrition(nutrition_list, item_name)
     puts "\nHere is the nutrition information for #{item_name}:"
-
     nutrition_list.each do |item|
-      puts "#{item.flatten[0]}: #{item.flatten[1]}"
+      puts "#{item[0]}: #{item[1]}"
     end
     continue?
-  end
-
-  def get_evm_nutrition(a)
-    puts "IN get_evm_nutrition"
   end
 
   def continue?
     puts "Would you like to continue to find more items? (y/n)"
     input = gets.strip.downcase
-    input == "y" ? list_menu : bye
+    input == "y" ? list_restaurants : bye
   end
 
   def bye
-    puts "Thank You for using McDonald's Nutrition Finder"
+    puts "Thank You for using the Fast Food Nutrition Finder"
   end
 end

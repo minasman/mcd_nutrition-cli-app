@@ -70,7 +70,6 @@ class Scraper
   def scrape_category_items(item_name, index, item_site, restaurant)
       item_list = []
       site = Nokogiri::HTML(open(item_site))
-
       case restaurant
       when "Burger King"
         site = site.css("div table tbody tr")
@@ -171,14 +170,26 @@ class Scraper
     end
   end
 
-  def scrape_nutrition_info(item) #get a hash
-    index = 2
+  def scrape_nutrition_info(item_name, item_site)
+    index = 1
     nutrition_list = []
-    url = "https://fastfoodnutrition.org#{item.flatten[1]}"
-    site = Nokogiri::HTML(open(url))
-    site = site.css(".item_nutrition tbody tr")
-    binding.pry
-    nutrition_list << {site.css("tr")[2].css("td a span").text => site.css("tr")[2].css("td td").text}
+    site = Nokogiri::HTML(open(item_site))
+    nutrition_items = site.css("div table thead tr th")
+    nutrition_items.each {|desc| nutrition_list << [desc.text.strip, ""]}
+    site = site.css("div table tbody tr")
+    site.each do |item|
+      if item.to_s.include?("<td>")
+        if item.css("td")[0].text == item_name
+          i = 0
+          while i < nutrition_list.length
+            nutrition_list[i][1] = item.css("td")[i].text
+            i += 1
+          end
+        end
+      end
+    end #do
+    nutrition_list.shift
+    nutrition_list
   end
 
 end
